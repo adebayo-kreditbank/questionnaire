@@ -2,13 +2,17 @@
 
 namespace App\Exceptions;
 
+use App\Trait\ResponseTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ResponseTrait;
+
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -31,9 +35,7 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => 'Resource not found on Manual.'
-                ], 404);
+                return $this->onError(Response::HTTP_NOT_FOUND, 'Resource not found on Manual');
             }
         });
     }
