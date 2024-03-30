@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_active')->comment('to deactivate a user');
+            $table->boolean('is_active')->default(true)->comment('to deactivate a user');
             $table->foreignId('role_id')->nullable(); # use foreignId to avoid error because as of now, role migration does not yet exist
             $table->rememberToken();
             $table->timestamps();
