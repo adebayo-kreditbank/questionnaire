@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('question_id')->references('id')->on('questions')->onDelete('cascade');
             $table->foreignId('answer_id')->references('id')->on('answers')->onDelete('cascade');
             $table->foreignId('behaviour_id')->references('id')->on('behaviours')->onDelete('cascade');
-            $table->timestamps();
 
             $table->unique(['question_id', 'answer_id', 'behaviour_id']);
         });

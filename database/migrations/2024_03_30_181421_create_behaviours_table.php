@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Status;
 use App\Models\Product;
 use App\Models\Question;
 use Illuminate\Database\Migrations\Migration;
@@ -15,9 +16,9 @@ return new class extends Migration
     {
         Schema::create('behaviours', function (Blueprint $table) {
             $table->id();
-            $table->string('label')->nullable();
             $table->foreignIdFor(Question::class)->nullable();
-            $table->foreignIdFor(Product::class)->nullable();
+            $table->json('product_included')->nullable();
+            $table->json('product_excluded')->nullable();
             $table->timestamps();
         });
     }
