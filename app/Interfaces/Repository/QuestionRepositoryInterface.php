@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Interfaces\Repository;
 
-interface QuestionRepositoryInterface 
+interface QuestionRepositoryInterface extends RepositoryInterface
 {
-    public function getAll();
-    public function getAllById(int $questionId);
-    public function delete(int $questionId);
-    public function create(array $questionDetails);
-    public function update($questionId, array $newDetails);
+    # extends declarations from the parent Interface before this
+
+    public function getAllWithAnswers();
+
+    public function getQuestionAnswerBehaviourById(int $questionId, int $answerId);
 }

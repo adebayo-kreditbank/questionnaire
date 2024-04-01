@@ -23,11 +23,12 @@ class Question extends Model
 
     /**
      * Many to Many relationship with Behaviour
+     * @return BelongsToMany
      */
     public function behaviours(): BelongsToMany
     {
         # if 2nd arg not specified, behaviour_question might be used as default
-        return $this->belongsToMany(Behaviour::class, 'que_ans_beh');//->withPivot('answer_id');
+        return $this->belongsToMany(Behaviour::class, 'que_ans_beh')->withPivot('answer_id');
     }
 
     public function ans(Collection $answers)

@@ -3,9 +3,8 @@
 namespace App\Repositories;
 
 use App\Interfaces\Repository\QuestionRepositoryInterface;
-use App\Models\Answer;
 use App\Models\Question;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 
 class QuestionRepository implements QuestionRepositoryInterface
@@ -15,7 +14,11 @@ class QuestionRepository implements QuestionRepositoryInterface
         return Question::all();
     }
 
-    public function getAllById(int $questionId)
+    /**
+     * retrieve a question by ID
+     * @return Question
+     */
+    public function getById(int $questionId): Question
     {
         return Question::findOrFail($questionId);
     }
@@ -35,9 +38,13 @@ class QuestionRepository implements QuestionRepositoryInterface
         return Question::whereId($questionId)->update($newDetails);
     }
 
+    /**
+     * Get all questions with their answer options
+     * this query can be further optimized.
+     */
     public function getAllWithAnswers()
     {
-        Log::channel('stderr')->info('fetching from repository');
+        Log::channel('stderr')->info('fetching from repository, not cache');
 
         return  Question::with('answers')->get()->map(function ($question) {
 
@@ -64,7 +71,14 @@ class QuestionRepository implements QuestionRepositoryInterface
         });
     }
 
-    public function getAllWithAnswersAndBehaviour()
+    /**
+     * Get the behaviours of questions and answers using ID
+     */
+    public function getQuestionAnswerBehaviourById(int $questionId, int $answerId)
     {
+        $question = $this->getById($questionId);
+        /** @var BelongsToMany */
+        $questionBehaviours = optional($question)->behaviours();
+        return optional($questionBehaviours)->wherePivot('answer_id', $answerId)?->first();
     }
 }
