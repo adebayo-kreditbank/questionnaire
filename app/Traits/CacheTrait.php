@@ -21,6 +21,7 @@ trait CacheTrait
     {
         return Cache::remember($key, $ttl ??= now()->addHour(), $valueClosure);
     }
+    
 
     /**
      * delete cache 
