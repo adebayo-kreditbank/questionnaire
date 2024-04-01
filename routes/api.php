@@ -1,13 +1,11 @@
 <?php
 
+use App\Http\Controllers\QuestionnaireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-Route::get('q', function() {
-    return "found!";
+/** api/v1 */
+Route::group(['prefix' => 'questionnaire'], function() {
+    Route::get('/', [QuestionnaireController::class, 'index']);
+    Route::post('/', [QuestionnaireController::class, 'store']);
 });

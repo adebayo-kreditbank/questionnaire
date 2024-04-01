@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Trait\ResponseTrait;
+use App\Traits\ResponseTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
