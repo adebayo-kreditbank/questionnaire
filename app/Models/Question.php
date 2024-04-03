@@ -8,9 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class Question
+ *
+ * @property int          $id
+ * @property string       $question
+ * @property int          $parent_question_id
+ * @property bool         $is_published
+ * @property Carbon       $date # derived column, see method getDateAttribute
+ * @property Answer       $answers
+ * @property Behaviour    $behaviours
+ * @property Collection[] $ans
+ */
 class Question extends Model
 {
     use HasFactory;
+
+    protected $fillable = [ "question", "parent_question_id", "is_published"];
+    
+    protected $casts = [
+        "is_published" => "boolean"
+    ];
 
     /**
      * Many to Many relationship with Answer
@@ -29,6 +47,11 @@ class Question extends Model
     {
         # if 2nd arg not specified, behaviour_question might be used as default
         return $this->belongsToMany(Behaviour::class, 'que_ans_beh')->withPivot('answer_id');
+    }
+
+    public function getDateAttribute()
+    {
+        return $this->created_at->format('Y-m-d H:i:s');
     }
 
     public function ans(Collection $answers)

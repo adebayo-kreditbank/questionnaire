@@ -39,11 +39,11 @@ trait ResponseTrait
      * @param array $data
      * @return Response|JsonResponse
      */
-    public function onError($statusCode, $message, $data = []): Response|JsonResponse
+    public function onError(int $statusCode, string $message = null, $data = []): Response|JsonResponse
     {
         return response()->json([
             "status" => $statusCode,
-            "message" => $message,
+            "message" => $message ??= $this->getMessage($statusCode),
             "data" => $data
         ], $statusCode);
     }
@@ -58,6 +58,10 @@ trait ResponseTrait
     {
         $message = match($statusCode) {
             Response::HTTP_OK => "{$resource} request successfully completed",
+            Response::HTTP_BAD_REQUEST => "{$resource} invalid request",
+            Response::HTTP_UNAUTHORIZED => "Unauthorized access!",
+            Response::HTTP_INTERNAL_SERVER_ERROR => "error occured! could not complete the request",
+            Response::HTTP_NOT_FOUND => "requested {$resource} not found",
             default => "{$resource} request completed"
         };
 

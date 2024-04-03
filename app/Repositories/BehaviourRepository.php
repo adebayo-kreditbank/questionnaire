@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class BehaviourRepository implements BehaviourRepositoryInterface
 {
-    public function getAll()
+    public function getAll(bool $descOrder = false)
     {
-        return Behaviour::all();
+        return $descOrder ? Behaviour::latest()->get() : Behaviour::all();
     }
 
     public function getById(int $questionId)

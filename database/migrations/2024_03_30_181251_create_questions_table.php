@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('question');
             $table->foreignId('parent_question_id')->nullable()->comment('response to the parent question prompts this');
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class QuestionRepository implements QuestionRepositoryInterface
 {
-    public function getAll()
+    public function getAll(bool $descOrder = false)
     {
-        return Question::all();
+        return $descOrder ? Question::orderBy('id', 'DESC')->get() : Question::all();
     }
 
     /**
@@ -46,7 +46,7 @@ class QuestionRepository implements QuestionRepositoryInterface
     {
         Log::channel('stderr')->info('fetching from repository, not cache');
 
-        return  Question::with('answers')->get()->map(function ($question) {
+        return  Question::with('answers')->where('is_published', true)->get()->map(function ($question) {
 
             $answers = $question->answers->map(function($answer) use ($question) {
                 $b = $answer->behaviours->filter(function($behaviour) use ($question) {

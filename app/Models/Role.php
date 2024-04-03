@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+
+    public static array $adminArray = [1, 2];
 }

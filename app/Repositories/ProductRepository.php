@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function getAll()
+    public function getAll(bool $descOrder = false)
     {
-        return Product::all();
+        return $descOrder ? Product::latest()->get(): Product::all();
     }
 
     /**

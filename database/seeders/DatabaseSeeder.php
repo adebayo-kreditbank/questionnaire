@@ -21,8 +21,14 @@ class DatabaseSeeder extends Seeder
         // create category
         if(Category::count() == 0) Category::factory()->create();
 
-        // create user
-        if(User::count() == 0) User::factory(5)->create();
+        // create a super admin user with my email
+        if(User::count() == 0) User::factory(1)->create([
+            'email' => 'adsonet2016@gmail.com',
+            'role_id' => 1
+        ]);
+
+        // create other users
+        if(User::count() == 1) User::factory(5)->create();
 
         // create others
         $this->call([
@@ -32,12 +38,5 @@ class DatabaseSeeder extends Seeder
             BehaviourSeeder::class,
             QuestionAnswerBahaviourSeeder::class
         ]);
-
-        
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

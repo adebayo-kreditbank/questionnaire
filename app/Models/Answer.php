@@ -7,11 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Class Question
+ *
+ * @property int          $id
+ * @property string       $answer
+ * @property Carbon       $date # derived column, see method getDateAttribute
+ * @property Question     $questions
+ * @property Behaviour    $behaviours
+ */
 class Answer extends Model
 {
     use HasFactory;
 
     // protected $with = ['behaviours'];
+
+    protected $fillable = [ "answer" ];
 
     /**
      * Many to Many relationship with Question
@@ -31,9 +42,8 @@ class Answer extends Model
         return $this->belongsToMany(Behaviour::class, 'que_ans_beh')->withPivot('question_id');;
     }
 
-    public function behaviour()
+    public function getDateAttribute()
     {
-        # if 2nd arg not specified, behaviour_answer might be used as default
-        return $this->behaviours();
+        return $this->created_at->format('Y-m-d H:i:s');
     }
 }
