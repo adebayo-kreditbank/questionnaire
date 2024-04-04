@@ -143,6 +143,9 @@ class QuestionController extends Controller
 
                 $this->behaviourRepository->syncAnswerWithQuestion($behaviour, $answerId, $id);
 
+                # clear cache
+                $this->forgetAllQuestionsCached();
+
             } catch (Exception $e) {
                 Log::debug($e->getMessage());
             }

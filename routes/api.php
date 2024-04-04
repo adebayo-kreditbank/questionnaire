@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Route;
 
 /** Health check */
 Route::get('health-check', function(){
-    return response()->json(["App is health"]);
+    return response()->json(["App is healthy"]);
 });
 
 /**
  * api/v1
  * Questionnaire
- * @see ./admin/api.php for admin backend
+ * @see ./admin/api.php for the admin backend
  */
 Route::group(['prefix' => 'questionnaire'], function() {
     Route::get('/', [QuestionnaireController::class, 'index'])->name('questionnaire.get');

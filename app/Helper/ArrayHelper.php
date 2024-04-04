@@ -6,8 +6,8 @@ class ArrayHelper {
     public static function extractWantedFromUnwanted(array|null $wantedList, array|null $unwatedList): array
     {
         if (empty($wantedList) && empty($unwatedList)) return [];
-        $wantedList = $wantedList ??= [];
-        $unwatedList = $unwatedList ??= [];
+        $wantedList ??= [];
+        $unwatedList ??= [];
 
         // Extract elements of $wantedList not present in $unwatedList
         $wantedElements = array_filter($wantedList, function ($wantedItem) use ($unwatedList) {

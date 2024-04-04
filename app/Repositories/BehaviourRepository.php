@@ -43,6 +43,6 @@ class BehaviourRepository implements BehaviourRepositoryInterface
     {
         return $behaviour->answers()->sync([
             $answerId => ['question_id' => $questionId]
-        ], false);
+        ], true);
     }
 }
