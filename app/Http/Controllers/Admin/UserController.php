@@ -27,6 +27,7 @@ class UserController extends Controller
 
     /**
      * Admin Login
+     * COULD BE DONE DIFFERENTLY. NOT SO IMPORTANT IN THIS PROJECT,
      */
     public function login(LoginRequest $request)
     {

@@ -1,13 +1,15 @@
 <template>
+
     <!-- Container Fluid-->
     <div id="container-wrapper" class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Mapping Question with Answers</h1>
+            <h1 class="h3 mb-0 text-gray-800">Behaviours Logic</h1>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="./">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Mapping</li>
+                <li class="breadcrumb-item active" aria-current="page">Behaviours Logic</li>
             </ol>
         </div>
+
 
         <div class="row">
 
@@ -19,13 +21,14 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Question</th>
+                                    <th>Behaviour Logic</th>
                                 </tr>
                             </thead>
 
                             <tbody>
 
-                                <table-row v-for="question in questions" :key="question.id" :question="question" :answers="answers" :allQuestions="questions">
+                                <table-row v-for="behaviour in behaviours" :key="`$tabrow${behaviour.id}`" :behaviour="behaviour"
+                                    :products="products">
                                 </table-row>
 
                             </tbody>
@@ -42,8 +45,6 @@
 </template>
 
 <script>
-import useValidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
 import { getRequest } from '../../../helpers/api'
 import TableRow from './TableRow.vue'
 
@@ -53,38 +54,27 @@ export default {
     },
     data() {
         return {
-            questions: [
+            behaviours: [
             ],
-            answers: [
+            products: [
             ],
         }
     },
     created() {
-        this.getQuestions()
-        this.getAnswers()
+        this.getBehaviours()
     },
     methods: {
-        getQuestions() {
-            getRequest('admin/mappings/questions', this.form)
+        getBehaviours() {
+            getRequest('admin/behaviours?withProduct=true', {})
                 .then(response => {
-                    console.log('data now', response.data)
                     if (response.status === 200) {
-                        this.questions = response.data.data;
+                        this.behaviours = response.data.data.behaviours;
+                        this.products = response.data.data.products;
                     }
                 }).catch((error) => {
                     this.errors.message = error.response.data.message ?? "invalid request"
                 }).finally(() => this.isLoading = false)
-        },
-        getAnswers() {
-            getRequest('admin/answers', this.form)
-                .then(response => {
-                    if (response.status === 200) {
-                        this.answers = response.data.data;
-                    }
-                }).catch((error) => {
-                    this.errors.message = error.response.data.message ?? "invalid request"
-                }).finally(() => this.isLoading = false)
-        },
+        }
     }
 }
 </script>

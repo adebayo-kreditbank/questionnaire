@@ -171,7 +171,7 @@ export default {
             this.edit.answerId = answer.id
         },
         updateAnswer() {
-            putRequest('admin/answers', this.form, this.edit.answerId)
+            putRequest(`admin/answers/${this.edit.answerId}`, this.form)
                 .then(response => {
                     console.log('data from API', response.data)
                     if (response.status === 200) {

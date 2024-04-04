@@ -8,5 +8,7 @@ interface QuestionRepositoryInterface extends RepositoryInterface
 
     public function getAllWithAnswers();
 
+    public function getWithAnswersAndBehaviours(int $questionId);
+
     public function getQuestionAnswerBehaviourById(int $questionId, int $answerId);
 }

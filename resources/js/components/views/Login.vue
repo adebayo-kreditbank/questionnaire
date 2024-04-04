@@ -113,7 +113,6 @@ export default {
                         this.$router.push({ name: 'AdminIndex' })
                     }
                 }).catch((error) => {
-                    console.error('error from API', error)
                     this.form.password = ""
                     this.errors.message = error.response.data.message ?? "invalid login details"
                 }).finally(() => this.isLoading = false)

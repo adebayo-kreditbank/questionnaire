@@ -9,6 +9,7 @@ use App\Http\Resources\Admin\AnswerResource;
 use App\Repositories\AnswerRepository;
 use App\Traits\CacheTrait;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class AnswerController extends Controller
@@ -17,7 +18,6 @@ class AnswerController extends Controller
 
     /**
      * Inject relevant repository dependencies
-     * use repository in case data layer needs to change
      */
     public function __construct(
         private AnswerRepository $answerRepository
@@ -25,9 +25,12 @@ class AnswerController extends Controller
     }
 
 
-    public function index()
+    /**
+     * Get all Answers
+     * @return Response|JsonResponse
+     */
+    public function index(): Response|JsonResponse
     {
-        $this->forgetAllAnswersCached();
         $data = $this->cacheToRemember(
             CacheKeyEnum::ANSWERS->value,
             fn () => $this->answerRepository->getAll(descOrder: true)
@@ -40,10 +43,15 @@ class AnswerController extends Controller
     }
 
 
-    public function store(AnswerRequest $request)
+    /**
+     * create new answer
+     * @param AnswerRequest $request
+     * @return Response|JsonResponse
+     */
+    public function store(AnswerRequest $request): Response|JsonResponse
     {
         if ($answer = $this->answerRepository->create($request->validated())) {
-            
+
             $this->forgetAllAnswersCached(); # delete from cache
 
             return $this->onSuccess(
@@ -56,14 +64,20 @@ class AnswerController extends Controller
     }
 
 
-    public function update(AnswerRequest $request, int $id)
+    /**
+     * upadate answer
+     * @param AnswerRequest $request
+     * @param int $id
+     * @return Response|JsonResponse
+     */
+    public function update(AnswerRequest $request, int $id): Response|JsonResponse
     {
         if (!$this->answerRepository->getById($id)) {
             return $this->onError(Response::HTTP_NOT_FOUND);
         }
 
         if ($this->answerRepository->update($id, $request->validated())) {
-            
+
             $this->forgetAllAnswersCached(); # delete from cache
 
             return $this->index();
@@ -72,18 +86,26 @@ class AnswerController extends Controller
         return $this->onError(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-
+    /**
+     * Delete an answer
+     * @param int $id
+     * @return Response|JsonResponse
+     */
     public function destroy(int $id)
     {
         if ($this->answerRepository->delete($id)) {
 
             $this->forgetAllAnswersCached(); # delete from cache
-            
+
             return $this->index();
         }
     }
 
-    
+
+    /**
+     * delete all cached data at once
+     * @return void
+     */
     private function forgetAllAnswersCached(): void
     {
         # delete from cache

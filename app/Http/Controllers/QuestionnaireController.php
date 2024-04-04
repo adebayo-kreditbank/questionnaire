@@ -12,6 +12,7 @@ use App\Repositories\ProductRepository;
 use App\Repositories\QuestionRepository;
 use App\Traits\CacheTrait;
 use App\Traits\ResponseTrait;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,10 +32,11 @@ class QuestionnaireController extends Controller
     ) {
     }
 
+    
     /**
      * Fetch all questionnaire and answer options
      */
-    public function index(): Response | JsonResponse
+    public function index(): Response|JsonResponse
     {
         $data = $this->cacheToRemember(
             CacheKeyEnum::QUESTIONNAIRE->value,
@@ -47,30 +49,37 @@ class QuestionnaireController extends Controller
         );
     }
 
+
     /**
      * Compute answer and suggest products
+     * @param QuestionnaireRequest $request
      */
-    public function store(QuestionnaireRequest $request)
+    public function store(QuestionnaireRequest $request): Response|JsonResponse
     {
         $questionAnswers = $request->validated();
         $suggestedProducts = [];
 
         foreach ($questionAnswers['questionnaire'] as $questionAnswer) {
 
-            # fetch the behaviours logic of the questions and answers submitted
-            $behaviour = $this->questionRepository->getQuestionAnswerBehaviourById(
-                $questionAnswer['questionId'],
-                $questionAnswer['answerId']
-            );
-
-            # Extract related products from unrelated ones
-            if ($behaviour && (optional($behaviour)->product_included || optional($behaviour)->product_excluded)) {
-                $suggestedProducts[] = ArrayHelper::extractWantedFromUnwanted(
-                    optional($behaviour)->product_included, 
-                    optional($behaviour)->product_excluded
+            try {
+                # fetch the behaviours logic of the questions and answers submitted
+                $behaviour = $this->questionRepository->getQuestionAnswerBehaviourById(
+                    $questionAnswer['questionId'],
+                    $questionAnswer['answerId']
                 );
+
+                # Extract related products from unrelated ones
+                if ($behaviour && (optional($behaviour)->product_included || optional($behaviour)->product_excluded)) {
+                    $suggestedProducts[] = ArrayHelper::extractWantedFromUnwanted(
+                        optional($behaviour)->product_included,
+                        optional($behaviour)->product_excluded
+                    );
+                }
+            } catch (Exception $e) {
+                Log::channel('stderr')->info($e->getMessage());
             }
         }
+
         $suggestedProducts = ArrayHelper::flattenArray($suggestedProducts);
 
         return $this->onSuccess(
@@ -79,6 +88,11 @@ class QuestionnaireController extends Controller
         );
     }
 
+
+    /**
+     * Build Products to be suggested
+     * @param array $suggestedProducts
+     */
     private function buildSuggestedProducts(array $suggestedProducts): array
     {
         $products = [];
@@ -86,21 +100,25 @@ class QuestionnaireController extends Controller
         if (count($suggestedProducts) > 0)
 
             foreach ($suggestedProducts as $product) {
+                try {
 
-                // if category ID array, then fetch all products in the category
-                if (is_array($product) && optional($product)['category']) {
-                    $productResource = $this->productRepository->getAllByCategoryId((int)$product['category'])->toArray();
-                    $products = array_merge($productResource, $products);
-                }
+                    # if category ID array, then fetch all products in the category
+                    if (is_array($product) && optional($product)['category']) {
+                        $productResource = $this->productRepository->getAllByCategoryId((int)$product['category'])->toArray();
+                        $products = array_merge($productResource, $products);
+                    }
 
-                // if integer, then fetch product with that ID
-                if (is_int($product)) {
-                    $productResource = $this->productRepository->getById($product)->toArray();
-                    $products[] = $productResource;
+                    # if integer, then fetch product with that ID
+                    if (is_int($product)) {
+                        $productResource = $this->productRepository->getById($product)->toArray();
+                        $products[] = $productResource;
+                    }
+
+                } catch (Exception $e) {
+                    Log::channel('stderr')->info($e->getMessage());
                 }
             }
 
         return ArrayHelper::removeDuplicate($products);
     }
-
 }

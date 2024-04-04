@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Class Question
+ *
+ * @property int          $question_id
+ * @property string       $product_included
+ * @property string       $product_excluded
+ * @property Carbon       $created_at
+ * @property Carbon       $created_at
+ * @property Question     $questions
+ * @property Behaviour    $answers
+ */
 class Behaviour extends Model
 {
     use HasFactory;
@@ -18,6 +29,12 @@ class Behaviour extends Model
     protected $hidden = [
         "created_at",
         "updated_at"
+    ];
+
+    protected $fillable = [
+        "question_id", 
+        "product_included", 
+        "product_excluded"
     ];
 
     /**

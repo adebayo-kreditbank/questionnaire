@@ -13,31 +13,31 @@ class ProductRepository implements ProductRepositoryInterface
 {
     public function getAll(bool $descOrder = false)
     {
-        return $descOrder ? Product::latest()->get(): Product::all();
+        return $descOrder ? Product::orderBy('id', 'DESC')->get(): Product::all();
     }
 
     /**
-     * retrieve a question by ID
+     * retrieve a product by ID
      * @return Product
      */
-    public function getById(int $questionId): Product
+    public function getById(int $productId): Product
     {
-        return Product::with('category')->findOrFail($questionId);
+        return Product::with('category')->findOrFail($productId);
     }
 
-    public function delete(int $questionId)
+    public function delete(int $productId)
     {
-        return Product::destroy($questionId);
+        return Product::destroy($productId);
     }
 
-    public function create(array $questionDetails)
+    public function create(array $productDetails)
     {
-        return Product::create($questionDetails);
+        return Product::create($productDetails);
     }
 
-    public function update($questionId, array $newDetails)
+    public function update($productId, array $newDetails)
     {
-        return Product::whereId($questionId)->update($newDetails);
+        return Product::whereId($productId)->update($newDetails);
     }
 
     public function getAllByCategoryId(int $categoryId): Collection

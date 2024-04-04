@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @property int          $id
  * @property string       $answer
+ * @property Carbon       $created_at
+ * @property Carbon       $created_at
  * @property Carbon       $date # derived column, see method getDateAttribute
  * @property Question     $questions
  * @property Behaviour    $behaviours

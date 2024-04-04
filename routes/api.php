@@ -4,8 +4,17 @@ use App\Http\Controllers\QuestionnaireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/** api/v1 */
+/** Health check */
+Route::get('health-check', function(){
+    return response()->json(["App is health"]);
+});
+
+/**
+ * api/v1
+ * Questionnaire
+ * @see ./admin/api.php for admin backend
+ */
 Route::group(['prefix' => 'questionnaire'], function() {
-    Route::get('/', [QuestionnaireController::class, 'index']);
-    Route::post('/', [QuestionnaireController::class, 'store']);
+    Route::get('/', [QuestionnaireController::class, 'index'])->name('questionnaire.get');
+    Route::post('/', [QuestionnaireController::class, 'store'])->name('questionnaire.post');
 });

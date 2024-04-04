@@ -25,8 +25,8 @@ const getRequest = async (endpoint, body) => {
     return response
 }
 
-const putRequest = async (endpoint, body, id) => {
-    const response = await axios.put(`${endpoint}/${id}`, body)
+const putRequest = async (endpoint, body) => {
+    const response = await axios.put(endpoint, body)
     return response
 }
 

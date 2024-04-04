@@ -197,7 +197,7 @@ export default {
             this.edit.questionId = question.id
         },
         updateQuestion() {
-            putRequest('admin/questions', this.form, this.edit.questionId)
+            putRequest(`admin/questions/${this.edit.questionId}`, this.form)
                 .then(response => {
                     console.log('data from API', response.data)
                     if (response.status === 200) {
@@ -226,7 +226,7 @@ export default {
                 }).finally(() => this.isLoading = false)
         },
         publish(question) {
-            putRequest('admin/questions', { question: question.question, is_published: !question.isPublished }, question.id)
+            putRequest(`admin/questions/${question.id}`, { question: question.question, is_published: !question.isPublished })
                 .then(response => {
                     console.log('data from API', response.data)
                     if (response.status === 200) {

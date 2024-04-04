@@ -14,7 +14,7 @@ import pageAnswer from '../components/pages/answer/Answer.vue';
 
 import pageMapping from '../components/pages/mapping/Mapping.vue';
 
-import pageBehaviour from '../components/pages/Behaviour.vue';
+import pageBehaviour from '../components/pages/behaviour/Behaviour.vue';
 
 import pageNotFound from '../components/pages/NotFound.vue';
 

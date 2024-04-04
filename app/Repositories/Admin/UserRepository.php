@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class UserRepository implements UserRepositoryInterface
 {
 
-    public function getAll()
+    public function getAll(bool $descOrder = false)
     {
         return User::all();
     }

@@ -10,35 +10,39 @@ class BehaviourRepository implements BehaviourRepositoryInterface
 {
     public function getAll(bool $descOrder = false)
     {
-        return $descOrder ? Behaviour::latest()->get() : Behaviour::all();
+        return $descOrder ? Behaviour::orderBy('id', 'DESC')->get() : Behaviour::all();
     }
 
-    public function getById(int $questionId)
+    public function getById(int $behaviourId)
     {
-        return Behaviour::findOrFail($questionId);
+        return Behaviour::findOrFail($behaviourId);
     }
 
-    public function delete(int $questionId)
+    public function delete(int $behaviourId)
     {
-        return Behaviour::destroy($questionId);
+        return Behaviour::destroy($behaviourId);
     }
 
-    public function create(array $questionDetails)
+    public function create(array $behaviourDetails)
     {
-        return Behaviour::create($questionDetails);
+        return Behaviour::create($behaviourDetails);
     }
 
-    public function update($questionId, array $newDetails)
+    public function update($behaviourId, array $newDetails)
     {
-        return Behaviour::whereId($questionId)->update($newDetails);
+        return Behaviour::whereId($behaviourId)->update($newDetails);
     }
 
-    public function getAllWithAnswers()
+    public function getAllWithPivot(bool $descOrder = false)
     {
-        Log::channel('stderr')->info('fetching from repository');
+        $behaviour = $descOrder ? Behaviour::orderBy('id', 'DESC') : Behaviour::orderBy('id', 'ASC');
+        return $behaviour->with(['answers', 'questions'])->get();
+    }
 
-        return  Behaviour::where('question_id')->get()->map(function ($question) {
-
-        });
+    public function syncAnswerWithQuestion(Behaviour $behaviour, int $answerId, int $questionId): array|null
+    {
+        return $behaviour->answers()->sync([
+            $answerId => ['question_id' => $questionId]
+        ], false);
     }
 }

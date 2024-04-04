@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Log;
  * @property string       $question
  * @property int          $parent_question_id
  * @property bool         $is_published
+ * @property Carbon       $created_at
+ * @property Carbon       $created_at
  * @property Carbon       $date # derived column, see method getDateAttribute
  * @property Answer       $answers
  * @property Behaviour    $behaviours
@@ -36,7 +38,7 @@ class Question extends Model
     public function answers(): BelongsToMany
     {
         # if 2nd arg not specified, answer_question might be used as default
-        return $this->belongsToMany(Answer::class, 'que_ans_beh'); //->withPivot('behaviour_id');
+        return $this->belongsToMany(Answer::class, 'que_ans_beh')->withPivot('behaviour_id');
     }
 
     /**
