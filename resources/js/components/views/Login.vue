@@ -110,7 +110,8 @@ export default {
                         this.form.password = "";
                         initManualClass().setAuthToken(response.data.data.token)
                         initManualClass().setAuthData(response.data.data.name)
-                        this.$router.push({ name: 'AdminIndex' })
+                        window.location.href = 'http://127.0.0.1:8000/admin/dashboard'
+                        // this.$router.push({ name: 'AdminIndex' })
                     }
                 }).catch((error) => {
                     this.form.password = ""
